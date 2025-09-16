@@ -1,5 +1,5 @@
 // app/auth/login.tsx
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { sendEmailVerification, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import React, { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -17,7 +17,7 @@ export default function Login() {
     try {
       const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
 
-      // 🚫 Block unverified accounts and resend the email
+      //Block unverified accounts and resend the email
       if (!cred.user.emailVerified) {
         await sendEmailVerification(cred.user);
         await signOut(auth); // sign them out
@@ -28,8 +28,8 @@ export default function Login() {
         return;
       }
 
-      // ✅ Verified → proceed to start page
-      router.replace('/start'); // later we can point this to /tabs/orders
+     
+      router.replace('/start'); 
     } catch (e: any) {
       Alert.alert('Sign in failed', e?.message ?? 'Unable to sign in');
     } finally {
@@ -38,13 +38,13 @@ export default function Login() {
   };
 
   const handleGuest = () => {
-    router.replace('/start'); // guest path → direct access (no auth)
+    router.replace('/start'); 
   };
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.title}>Welcome back,</Text>
-      <Text style={styles.subtitle}>Glad to see you!</Text>
+      <Text style={styles.title}>Welcome!</Text>
+      <Text style={styles.subtitle}>Enter your credentials below</Text>
 
       <TextInput
         placeholder="Email"
@@ -66,14 +66,6 @@ export default function Login() {
         <Text style={styles.btnText}>{busy ? 'Signing in…' : 'Sign In'}</Text>
       </TouchableOpacity>
 
-      {/* Continue as Guest */}
-      <TouchableOpacity onPress={handleGuest} style={styles.guestBtn}>
-        <Text style={styles.guestText}>Continue as Guest</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.footer}>
-        Don’t have an account? <Link href="/auth/signup" style={styles.link}>Sign Up</Link>
-      </Text>
     </View>
   );
 }

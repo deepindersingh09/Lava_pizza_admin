@@ -1,51 +1,43 @@
-// app/index.tsx
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Image, Dimensions } from 'react-native';
+// app/auth/choose.tsx
 import { useRouter } from 'expo-router';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../lib/firebase';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
-
-export default function Splash() {
+export default function ChooseRole() {
   const router = useRouter();
-
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      // Wait 1.2s so splash is visible
-      setTimeout(() => {
-        if (user) {
-         // router.replace('/(tabs)/orders'); // or your start screen
-        } else {
-          router.replace('/auth/login');
-        }
-      }, 1200);
-    });
-
-    return unsub;
-  }, []);
-
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/images/splash.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
+    <View style={styles.wrap}>
+      <Text style={styles.title}>Who’s signing in?</Text>
+      <Text style={styles.sub}>Choose your portal to continue</Text>
+
+      <TouchableOpacity
+        style={[styles.btn, styles.admin]}
+        onPress={() => router.push('/auth/login?role=admin')}
+      >
+        <Text style={styles.btnText}>Admin Login</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.btn, styles.staff]}
+        onPress={() => router.push('/auth/login?role=staff')}
+      >
+        <Text style={styles.btnText}>Staff Login</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.note}>
+        Use your work email. Unverified accounts will be blocked.
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFC800', // brand yellow background
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  // Make logo scale nicely (70-80% width)
-  logo: {
-    width: width * 0.7,
-    height: height * 0.3,
-  },
+  wrap: { flex: 1, backgroundColor: '#fff7e6', padding: 24, justifyContent: 'center' },
+  title: { fontSize: 28, fontWeight: '900', textAlign: 'center', color: '#111' },
+  sub: { textAlign: 'center', color: '#555', marginTop: 6, marginBottom: 24 },
+  btn: { padding: 16, borderRadius: 14, alignItems: 'center', marginBottom: 12 },
+  admin: { backgroundColor: '#FFC107' },
+  staff: { backgroundColor: '#FFD54F' },
+  btnText: { fontWeight: '800', color: '#111' },
+  note: { textAlign: 'center', color: '#666', marginTop: 12 },
 });
